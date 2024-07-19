@@ -7,7 +7,7 @@ export class RegisterUserDto {
 
   @IsString()
   @Length(1, 3)
-  readonly codeCountry: string;
+  readonly countryCode: string;
 
   @IsString()
   readonly userName: string;

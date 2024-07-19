@@ -13,7 +13,7 @@ export class User extends Document {
   cellPhone: string;
 
   @Prop({ required: true })
-  codeCountry: string;
+  countryCode: string;
 
   @Prop({ required: true })
   userName: string;
