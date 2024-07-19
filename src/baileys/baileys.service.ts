@@ -28,7 +28,6 @@ export class BaileysService implements OnModuleInit, OnModuleDestroy {
       this.sock = makeWASocket({
         printQRInTerminal: true,
         auth: state,
-        defaultQueryTimeoutMs: undefined,
       });
 
       this.sock.ev.on('creds.update', saveCreds);
@@ -59,29 +58,24 @@ export class BaileysService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  private keepAlive() {
-    setInterval(async () => {
-      try {
-        if (this.sock) {
-          await this.sock.sendPresenceUpdate('available');
-          await this.sock.sendMessage(
-            `${this.configService.get<string>('whatsapp.myPhone')}@s.whatsapp.net`,
-            {
-              text: 'Hello ther!!',
-            },
-          );
-          console.log('Sent presence update to keep the connection alive');
-        }
-      } catch (error) {
-        console.error('Failed to send presence update:', error);
-      }
-    }, 1000 * 10); // Actualiza la presencia cada 2 minutos
-  }
-
   // Método para enviar mensajes
   async sendMessage(countryCode: string, cellPhone: string, text: string) {
-    await this.sock.sendMessage(`${countryCode}${cellPhone}@s.whatsapp.net`, {
-      text,
-    });
+    try {
+      if (this.sock) {
+        await this.sock.sendMessage(
+          `${countryCode}${cellPhone}@s.whatsapp.net`,
+          {
+            text,
+          },
+        );
+      } else {
+        await this.connectToWhatsApp();
+        setTimeout(async () => {
+          console.log(this.sock);
+        }, 3000);
+      }
+    } catch (error) {
+      console.log('mario errorxd', error);
+    }
   }
 }
