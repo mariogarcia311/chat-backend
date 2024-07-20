@@ -1,15 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema()
+@Schema({ timestamps: true })
 export class User extends Document {
-  // id: string // Mongo me lo da
   @Prop({
     unique: true,
     index: true,
     required: true,
   })
-  @Prop({ required: true })
   cellPhone: string;
 
   @Prop({ required: true })

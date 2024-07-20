@@ -75,7 +75,7 @@ export class BaileysService implements OnModuleInit, OnModuleDestroy {
         }, 3000);
       }
     } catch (error) {
-      console.log('mario errorxd', error);
+      console.log('mario errorxds', error);
     }
   }
 }
