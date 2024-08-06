@@ -30,11 +30,17 @@ export class AuthService {
 
   async registerUser(registerUserDto: RegisterUserDto) {
     try {
-      const newUser = { ...registerUserDto, enabled: false };
       const { cellPhone, countryCode } = registerUserDto;
+      const newUser = {
+        ...registerUserDto,
+        completePhone: countryCode + cellPhone,
+        enabled: false,
+      };
+
       const existingUser = await this.userModel.findOne({
         cellPhone,
         countryCode,
+        completePhone: countryCode + cellPhone,
       });
 
       const user = existingUser ?? (await this.userModel.create(newUser));
@@ -49,7 +55,9 @@ export class AuthService {
         user.cellPhone,
         textOtpMessage(otpCreated.code),
       );
-      return otpCreated;
+      return {
+        userId: otpCreated.userId,
+      };
     } catch (error) {
       throw new InternalServerErrorException(error._message, {
         cause: error,
@@ -80,10 +88,18 @@ export class AuthService {
           new: true,
         },
       );
-      await this.sessionModel.findOneAndDelete({ device, userId });
+      await this.sessionModel.findOneAndDelete({ userId });
+      await this.sessionModel.findOneAndDelete({ device });
       const session = await this.sessionModel.create({ device, userId });
+      const sessionData = {
+        device: session.device,
+        userId: session.userId,
+        _id: session._id,
+        completePhone: user.completePhone, // Añade otros campos que necesites
+      };
+
       return {
-        token: this.getJwt(session),
+        token: this.getJwt(sessionData),
         session: session,
         user: newUser,
       };
@@ -103,5 +119,11 @@ export class AuthService {
     return token;
   }
 
-  async validateSession() {}
+  async verifyToken(token: string): Promise<JwtPayload> {
+    try {
+      return await this.jwtService.verifyAsync(token);
+    } catch (error) {
+      throw new Error('Invalid token');
+    }
+  }
 }

@@ -8,6 +8,11 @@ export class User extends Document {
     index: true,
     required: true,
   })
+  completePhone: string;
+
+  @Prop({
+    required: true,
+  })
   cellPhone: string;
 
   @Prop({ required: true })

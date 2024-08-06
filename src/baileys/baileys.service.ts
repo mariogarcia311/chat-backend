@@ -34,17 +34,17 @@ export class BaileysService implements OnModuleInit, OnModuleDestroy {
       this.sock.ev.on('connection.update', (update) => {
         const { connection, lastDisconnect } = update;
         if (connection === 'close') {
-          console.log('error conection marrio');
+          // console.log('error conection marrio');
           const shouldReconnect =
             (lastDisconnect.error as Boom)?.output?.statusCode !==
             DisconnectReason.loggedOut;
-          console.log(
-            'connection closed due to ',
-            lastDisconnect.error,
-            ', reconnecting ',
-            shouldReconnect,
-            'mario el loko',
-          );
+          // console.log(
+          //   'connection closed due to ',
+          //   lastDisconnect.error,
+          //   ', reconnecting ',
+          //   shouldReconnect,
+          //   'mario el loko',
+          // );
           // reconnect if not logged out
           if (shouldReconnect) {
             this.connectToWhatsApp();
@@ -54,7 +54,7 @@ export class BaileysService implements OnModuleInit, OnModuleDestroy {
         }
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -71,11 +71,11 @@ export class BaileysService implements OnModuleInit, OnModuleDestroy {
       } else {
         await this.connectToWhatsApp();
         setTimeout(async () => {
-          console.log(this.sock);
+          // console.log(this.sock);
         }, 3000);
       }
     } catch (error) {
-      console.log('mario errorxds', error);
+      // console.log('mario errorxds', error);
     }
   }
 }

@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BaileysModule } from './baileys/baileys.module';
+import { MessagesWsModule } from './messages-ws/messages-ws.module';
 
 @Module({
   imports: [
@@ -19,8 +20,10 @@ import { BaileysModule } from './baileys/baileys.module';
       }),
       inject: [ConfigService],
     }),
+
     AuthModule,
     BaileysModule,
+    MessagesWsModule,
   ],
   controllers: [],
   providers: [],

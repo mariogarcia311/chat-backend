@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { ValidateOtpDto } from './dto/validate-otp.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { GetSession } from './decorators/get-session.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -19,5 +21,13 @@ export class AuthController {
   @Post('validate-otp')
   validateOtp(@Body() validateOtpDto: ValidateOtpDto) {
     return this.authService.validateOtp(validateOtpDto);
+  }
+
+  @Get('private')
+  @UseGuards(AuthGuard())
+  private(@GetSession() session: any) {
+    return {
+      ...session,
+    };
   }
 }

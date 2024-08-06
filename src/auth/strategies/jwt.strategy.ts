@@ -21,10 +21,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }
-  async validate(payload: JwtPayload): Promise<User> {
+  async validate(payload: JwtPayload): Promise<JwtPayload> {
     const { _id, userId } = payload;
+    console.log(_id, userId, payload);
     const session = await this.sessionModel.findOne({ _id, userId });
+    console.log(session);
     if (!session) throw new UnauthorizedException('Token not valid');
-    return;
+    return payload;
   }
 }
